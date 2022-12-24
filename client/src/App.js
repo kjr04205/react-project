@@ -7,49 +7,31 @@ import { Table, TableHead, TableBody, TableRow, TableCell, withStyles, Paper } f
 const styles = theme => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
     overflow: 'auto',
   },
   table: {
     minWidth: 1080
   }
 })
-const customers = [
-  {
-    'id': 1,
-    'image': 'https://placeimg.com/64/64/any',
-    'name': '안효인',
-    'birthday': '971105',
-    'gender': '남자',
-    'job': '개발자',
-  },
-  {
-    'id': 2,
-    'image': 'https://placeimg.com/64/64/2',
-    'name': '안효순',
-    'birthday': '931105',
-    'gender': '여자',
-    'job': '프로그래머',
-  },
-  {
-    'id': 3,
-    'image': 'https://placeimg.com/64/64/3',
-    'name': '안킹인',
-    'birthday': '971205',
-    'gender': '남자',
-    'job': '교사',
-  },
-  {
-    'id': 4,
-    'image': 'https://placeimg.com/64/64/5',
-    'name': '양라희',
-    'birthday': '970331',
-    'gender': '여자',
-    'job': '보건관리자',
-  }
-]
 
 class App extends Component {
+
+  state = {
+    customers: ""
+  }
+
+  componentDidMount() {
+    this.callApi()
+      .then(res => this.setState({customers: res}))
+      .catch(err => console.log(err));
+  }
+  callApi = async () => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    console.log('body 위')
+    console.log(body);
+    return body;
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -67,7 +49,7 @@ class App extends Component {
           </TableHead>
           <TableBody>
             {
-              customers.map(c => {
+              this.state.customers ? this.state.customers.map(c => {
                 return (
                   <Customer
                     key={c.id}
@@ -80,6 +62,7 @@ class App extends Component {
                   />
                 );
               })
+                : ""
             }
           </TableBody>
         </Table>
